@@ -168,14 +168,23 @@ test_split <- function(data,ids1,ids2,var.genes,num_PCs,batch,
 }
 
 # Full clustering pipeline with built-in hypothesis testing
-scSHC <- function(data,batch=NULL,alpha=0.05,num_features=2500,
-                  num_PCs=30,parallel=T,cores=2) {
-  if (!parallel) {
-    cores <- 1
+scSHC <- function(data,batch=NULL,alpha=0.05,Seurat.var.genes=T, num_features=3000,
+                  num_PCs=30, cores=4) {
+
+  if (Seurat.var.genes) {
+    features <- VariableFeatures(FindVariableFeatures(data,nfeatures=num_features))
+  }else{
+    features <- NULL
   }
+  
   if (is.null(batch)) {
     batch <- rep("1",ncol(data))
+  }else{
+    batch <- as.character(data@meta.data[,batch])
   }
+
+  data <- GetAssayData(data,slot = "counts")
+  
   if (is.factor(batch)|is.numeric(batch)) {
     warning("Converting batch vector to character")
     batch <- as.character(batch)
