@@ -169,7 +169,7 @@ test_split <- function(data,ids1,ids2,var.genes,num_PCs,batch,
 
 # Full clustering pipeline with built-in hypothesis testing
 scSHC <- function(object,batch=NULL,alpha=0.05,Seurat.var.genes=T, num_features=3000,
-                  num_PCs=30, cores=4)
+                  num_PCs=30, cores=4){
 
   data <- GetAssayData(object,slot = "counts")
   
