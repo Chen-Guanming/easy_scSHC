@@ -169,13 +169,7 @@ test_split <- function(data,ids1,ids2,var.genes,num_PCs,batch,
 
 # Full clustering pipeline with built-in hypothesis testing
 scSHC <- function(object,batch=NULL,alpha=0.05,Seurat.var.genes=T, num_features=3000,
-                  num_PCs=30, cores=4) {
-
-  if (Seurat.var.genes) {
-    features <- VariableFeatures(FindVariableFeatures(object,nfeatures=num_features))
-  }else{
-    features <- NULL
-  }
+                  num_PCs=30, cores=4)
 
   data <- GetAssayData(object,slot = "counts")
   
@@ -196,9 +190,13 @@ scSHC <- function(object,batch=NULL,alpha=0.05,Seurat.var.genes=T, num_features=
   }
 
   # Get variable features
-  dev <- scry::devianceFeatureSelection(data)
-  var.genes <- rownames(data)[order(dev,decreasing=T)[1:num_features]]
-
+  if (Seurat.var.genes) {
+    vat.genes <- VariableFeatures(FindVariableFeatures(data,nfeatures=num_features))
+  }else{
+    dev <- scry::devianceFeatureSelection(data)
+    var.genes <- rownames(data)[order(dev,decreasing=T)[1:num_features]]
+  }
+                                             
   # Dimension reduction and clustering
   gm.x <- reduce_dimension(data[var.genes,],batch,num_PCs)[[2]]
   gm.d <- dist(gm.x)
