@@ -278,8 +278,8 @@ scSHC <- function(object,batch=NULL,alpha=0.05,Seurat.var.genes=T, num_features=
   for (i in 1:length(clusters)) {
     cluster_labels[clusters[[i]]] <- i
   }
-
-  return(list(cluster_labels,node0))
+  object$cluster <- cluster_labels
+  return(object)
 }
 
 # Significance analysis of pre-computed clusters
@@ -409,8 +409,7 @@ testClusters <- function(data,cluster_ids,batch=NULL,var.genes=NULL,
   for (x in 1:length(clusters)) {
     cluster_labels[which(cluster_ids%in%clusters[[x]])] <- paste0('new',x)
   }
-  object$cluster <- cluster_labels
-  return(object)
+  return(list(cluster_labels,node0))
 }
 
 
