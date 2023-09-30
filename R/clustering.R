@@ -191,7 +191,7 @@ scSHC <- function(object,batch=NULL,alpha=0.05,Seurat.var.genes=T, num_features=
 
   # Get variable features
   if (Seurat.var.genes) {
-    vat.genes <- VariableFeatures(FindVariableFeatures(object,nfeatures=num_features))
+    var.genes <- VariableFeatures(FindVariableFeatures(object,nfeatures=num_features))
   }else{
     dev <- scry::devianceFeatureSelection(data)
     var.genes <- rownames(data)[order(dev,decreasing=T)[1:num_features]]
